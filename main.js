@@ -59,10 +59,11 @@ class GameScene extends Phaser.Scene {
         // Platforms as static group
         this.platforms = this.physics.add.staticGroup();
         this.createPlatform(400, 590, 800); // ground
-        this.createPlatform(200, 490, 120);
-        this.createPlatform(400, 410, 120);
-        this.createPlatform(150, 400, 100);
+        this.createPlatform(700, 375, 120);
+        this.createPlatform(400, 450, 120);
+        this.createPlatform(175, 500, 100);
         this.createPlatform(600, 500, 100);
+        this.createPlatform(50, 400, 100);
 
         // Player
         this.player = this.physics.add.sprite(100, 450, 'knight').setScale(2).setCollideWorldBounds(true);
