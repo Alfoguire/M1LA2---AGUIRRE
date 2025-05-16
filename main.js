@@ -56,16 +56,14 @@ class GameScene extends Phaser.Scene {
 
         this.add.rectangle(400, 300, 800, 600, 0x87ceeb);
 
-        // Platforms as static group
         this.platforms = this.physics.add.staticGroup();
-        this.createPlatform(400, 590, 800); // ground
+        this.createPlatform(400, 590, 800); 
         this.createPlatform(700, 375, 120);
         this.createPlatform(400, 450, 120);
         this.createPlatform(175, 500, 100);
         this.createPlatform(600, 500, 100);
         this.createPlatform(50, 400, 100);
 
-        // Player
         this.player = this.physics.add.sprite(100, 450, 'knight').setScale(2).setCollideWorldBounds(true);
         this.player.body.setSize(20, 30).setOffset(6, 2);
 
@@ -85,7 +83,6 @@ class GameScene extends Phaser.Scene {
 
         this.player.play('idle');
 
-        // Coin setup
         this.coin = this.physics.add.sprite(400, 0, 'coin').setScale(2);
         this.coin.setBounce(0);
         this.coin.setCollideWorldBounds(true);
@@ -100,20 +97,16 @@ class GameScene extends Phaser.Scene {
 
         this.coin.play('spin');
 
-        // Bomb group
         this.bombs = this.physics.add.group();
 
-        // Collisions
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.coin, this.platforms);
 
         this.physics.add.overlap(this.player, this.coin, this.collectCoin, null, this);
         this.physics.add.overlap(this.player, this.bombs, this.hitBomb, null, this);
 
-        // Controls
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // Sounds
         this.coinSound = this.sound.add('coinSound');
         this.explosionSound = this.sound.add('explosion');
         this.bgMusic = this.sound.add('bgMusic', {
@@ -122,14 +115,12 @@ class GameScene extends Phaser.Scene {
         });
         this.bgMusic.play();
 
-        // UI
         this.starText = this.add.text(600, 16, 'Stars Collected: 0', {
             fontFamily: 'Courier New',
             fontSize: '12px',
             color: '#ffffff'
         });
 
-        // Spawn bombs randomly every 2 to 4 seconds
         this.time.addEvent({
             delay: Phaser.Math.Between(2000, 4000),
             callback: this.spawnBomb,
