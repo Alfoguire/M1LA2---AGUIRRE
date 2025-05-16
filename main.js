@@ -47,11 +47,8 @@ class GameScene extends Phaser.Scene {
         this.load.image('bomb', 'assets/images/bomb.png');
 
         this.load.audio('coinSound', 'assets/sounds/coin.wav');
-
         this.load.audio('explosion', 'assets/sounds/explosion.wav');
-
         this.load.audio('bgMusic', 'assets/sounds/time_for_adventure.mp3');
-
     }
 
     create() {
@@ -109,9 +106,6 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.coin, this.platforms);
 
-        // Bomb does NOT collide with platforms or ground (falls through)
-        // so no collider added for bombs with platforms
-
         this.physics.add.overlap(this.player, this.coin, this.collectCoin, null, this);
         this.physics.add.overlap(this.player, this.bombs, this.hitBomb, null, this);
 
@@ -120,12 +114,10 @@ class GameScene extends Phaser.Scene {
 
         // Sounds
         this.coinSound = this.sound.add('coinSound');
-
         this.explosionSound = this.sound.add('explosion');
-        
         this.bgMusic = this.sound.add('bgMusic', {
-            volume: 0.5,     // Optional: Adjust volume as needed
-            loop: true       // Loop the music
+            volume: 0.5,
+            loop: true
         });
         this.bgMusic.play();
 
@@ -174,13 +166,11 @@ class GameScene extends Phaser.Scene {
         this.colorIndex = (this.colorIndex + 1) % this.colors.length;
         this.player.setTint(this.colors[this.colorIndex]);
 
-        if (this.starsCollected % 8 === 0) {
-            this.bgMusic.stop();
+        if (this.starsCollected % 5 === 0) {
             this.player.setScale(this.player.scale + 0.1);
-            this.scene.start('WinScene');
-        } else {
-            this.spawnNewCoin();
         }
+
+        this.spawnNewCoin();
     }
 
     spawnNewCoin() {
@@ -208,16 +198,12 @@ class GameScene extends Phaser.Scene {
         bomb.body.setAllowGravity(true);
 
         bomb.setScale(0.1);
-
-        // Bomb does NOT collide with platforms so falls through
         bomb.body.checkCollision.up = false;
         bomb.body.checkCollision.down = false;
         bomb.body.checkCollision.left = false;
         bomb.body.checkCollision.right = false;
-
         bomb.body.setSize(bomb.width * 0.1, bomb.height * 0.1, true);
 
-        // Optional: destroy bomb after it falls below screen to save memory
         this.time.delayedCall(8000, () => {
             if (bomb.active) bomb.destroy();
         });
@@ -230,34 +216,6 @@ class GameScene extends Phaser.Scene {
         this.player.setVisible(false);
         this.player.body.enable = false;
         this.scene.start('GameOverScene');
-    }
-}
-
-class WinScene extends Phaser.Scene {
-    constructor() {
-        super('WinScene');
-    }
-
-    create() {
-        this.add.rectangle(400, 300, 800, 600, 0x000000);
-
-        this.add.text(400, 200, 'YOU WIN!', {
-            fontFamily: 'Courier New',
-            fontSize: '24px',
-            color: '#00ff00'
-        }).setOrigin(0.5);
-
-        const back = this.add.text(400, 300, 'BACK TO MENU', {
-            fontFamily: 'Courier New',
-            fontSize: '16px',
-            color: '#ffffff',
-            backgroundColor: '#444444',
-            padding: { x: 10, y: 5 }
-        }).setOrigin(0.5).setInteractive();
-
-        back.on('pointerdown', () => {
-            this.scene.start('MenuScene');
-        });
     }
 }
 
@@ -313,7 +271,7 @@ const config = {
             debug: false
         }
     },
-    scene: [MenuScene, GameScene, WinScene, GameOverScene]
+    scene: [MenuScene, GameScene, GameOverScene]
 };
 
 const game = new Phaser.Game(config);
